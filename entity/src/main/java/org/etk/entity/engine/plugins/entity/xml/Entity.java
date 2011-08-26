@@ -16,6 +16,10 @@
  */
 package org.etk.entity.engine.plugins.entity.xml;
 
+import java.util.List;
+
+import javolution.util.FastList;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -24,4 +28,69 @@ package org.etk.entity.engine.plugins.entity.xml;
  */
 public class Entity {
 
+  private List<Field> fields = FastList.newInstance();
+  
+  private List<Field> pkgs = FastList.newInstance();
+  
+  private List<Field> nopkg = FastList.newInstance();
+  
+  private List<Index> indexes = FastList.newInstance();
+  
+  private List<Relation> relations = FastList.newInstance();
+  
+  /**
+   * Adds the field for the Entity.
+   * @param object
+   */
+  public void addField(Object object) {
+    Field field = (Field) object;
+    fields.add(field);
+  }
+  
+  /**
+   * Adds the field for the Entity.
+   * @param object
+   */
+  public void addPrimaryKey(Object object) {
+    Field field = (Field) object;
+    pkgs.add(field);
+  }
+  
+  /**
+   * Adds the Index for the Entity.
+   * @param object
+   */
+  public void addIndex(Object object) {
+    Index index = (Index) object;
+    indexes.add(index);
+  }
+  
+  /**
+   * Adds the Relation for the Entity.
+   * @param object
+   */
+  public void addRelation(Object object) {
+    Relation relation = (Relation) object;
+    relations.add(relation);
+  }
+
+  public List<Field> getFields() {
+    return fields;
+  }
+
+  public List<Field> getPkgs() {
+    return pkgs;
+  }
+
+  public List<Field> getNopkg() {
+    return nopkg;
+  }
+
+  public List<Index> getIndexes() {
+    return indexes;
+  }
+
+  public List<Relation> getRelations() {
+    return relations;
+  }
 }
