@@ -28,6 +28,10 @@
         <artifactId>org.etk.component.common</artifactId>
         <version>${org.etk.component.version}</version>
       </dependency>
+      <dependency>
+          <groupId>javolution</groupId>
+          <artifactId>javolution</artifactId>
+      </dependency>  
   </dependencies>
   <build>
     <plugins>
