@@ -1,4 +1,4 @@
-# Enginerring Toolkit Entity Engine Java Library
+# Engineering Toolkit Entity Engine
 
 
 ## How to develop
