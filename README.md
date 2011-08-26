@@ -1,4 +1,4 @@
-# Enginering Toolkit Entity Engine
+# Engineering Toolkit Entity Engine
 
 
 ## How to develop
