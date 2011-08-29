@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.etk.entity.engine.plugins.entity.xml;
+package org.etk.entity.engine.plugins.model.xml;
 
 /**
  * Created by The eXo Platform SAS
@@ -22,6 +22,6 @@ package org.etk.entity.engine.plugins.entity.xml;
  *          exo@exoplatform.com
  * Aug 26, 2011  
  */
-public class View {
+public class EntityInfo {
 
 }

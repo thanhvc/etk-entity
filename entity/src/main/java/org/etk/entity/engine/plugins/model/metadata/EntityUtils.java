@@ -14,40 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.etk.entity.engine.plugins.entity.metadata;
-
-import java.io.Serializable;
+package org.etk.entity.engine.plugins.model.metadata;
 
 /**
  * Author : ThanhVuCong
  *          thanhvucong.78@gmail.com
  * Aug 26, 2011  
  */
-public abstract class EntityChildMeta implements Serializable {
+public class EntityUtils {
 
-  protected EntityMeta parentEntityMeta;
-  protected String desciption = "";
-  
-  protected EntityChildMeta() { }
-  protected EntityChildMeta(EntityMeta parentEntityMeta) {
-    this.parentEntityMeta = parentEntityMeta;
-  }
-  public EntityMeta getParentEntityMeta() {
-    return parentEntityMeta;
-  }
-  public void setParentEntityMeta(EntityMeta parentEntityMeta) {
-    this.parentEntityMeta = parentEntityMeta;
-  }
-  /**
-   * The description for documentation purposes.
-   * @return
-   */
-  public String getDesciption() {
-    return desciption;
-  }
-  public void setDesciption(String desciption) {
-    this.desciption = desciption;
-  }
-  
-  
 }

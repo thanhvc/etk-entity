@@ -29,6 +29,11 @@
         <version>${org.etk.component.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.etk.kernel</groupId>
+        <artifactId>org.etk.kernel.container</artifactId>
+        <version>${org.etk.kernel.version}</version>
+      </dependency>
+      <dependency>
           <groupId>javolution</groupId>
           <artifactId>javolution</artifactId>
       </dependency>  

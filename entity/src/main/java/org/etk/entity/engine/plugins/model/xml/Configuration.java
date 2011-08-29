@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.etk.entity.engine.plugins.entity.xml;
+package org.etk.entity.engine.plugins.model.xml;
 
 import java.util.Iterator;
 import java.util.Map;
