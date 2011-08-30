@@ -1,6 +1,6 @@
 <binding>
   <!-- the default deserializer to use for String -->
-  <format type="java.lang.String" deserializer="org.etk.kernel.container.xml.Deserializer.resolveString"/>
+  <format type="java.lang.String" deserializer="oorg.etk.entity.engine.plugins.model.xml.Deserializer.resolveString"/>
  <!-- configuration entity mapping -->
  <mapping name="entity" class="org.etk.entity.engine.plugins.model.xml.Entity" pre-get="preGet">
     <value name="entity-name"  field="entityName"/>
@@ -13,6 +13,21 @@
     <value name="auto-clear-cache" field="autoClearCache" usage="optional"/>
     <value name="priority" field="priority" usage="optional"/>
     <collection name="fields" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Field"/>
+    <collection name="pkgs" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.PKField"/>
+    <collection name="indexs" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Index"/>
+  </mapping>
+  
+  <!-- configuration view mapping -->
+ <mapping name="view" class="org.etk.entity.engine.plugins.model.xml.View" pre-get="preGet">
+    <value name="view-name"  field="viewName"/>
+    <value name="package-name"  field="packageName" />
+    <value name="member-entity"  field="memberEntity" />
+    <value name="description" field="description" usage="optional"/>
+    <value name="dependent-on" field="dependentOn" usage="optional"/>
+    <value name="never-cache" field="neverCache" usage="optional"/>
+    <value name="auto-clear-cache" field="autoClearCache" usage="optional"/>
+    <value name="priority" field="priority" usage="optional"/>
+    <collection name="alias" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Field"/>
     <collection name="pkgs" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.PKField"/>
     <collection name="indexs" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Index"/>
   </mapping>
