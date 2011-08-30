@@ -29,6 +29,17 @@ import org.etk.entity.engine.plugins.model.xml.Configuration;
  */
 public interface ConfigurationManager {
   /**
+   * The name of the system property that indicates whether the logger of the configuration
+   * must be in debug more or not.
+   */
+  public static final String LOG_DEBUG_PROPERTY = "org.etk.entity.configuration.debug";
+
+  /**
+   * Constant that indicates whether the logger of the configuration
+   * must be in debug more or not.
+   */
+  public static final boolean LOG_DEBUG = System.getProperty(LOG_DEBUG_PROPERTY) != null;
+  /**
    * Retrieving the Configuration which contains the information in the xml
    * file.
    * 

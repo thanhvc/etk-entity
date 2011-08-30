@@ -16,12 +16,21 @@
  */
 package org.etk.entity.engine.plugins.model.xml;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javolution.util.FastMap;
 
 import org.etk.common.logging.Logger;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IMarshallingContext;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,6 +47,7 @@ public final class Configuration implements Cloneable {
   private Map<String, Entity> entitiesMap = FastMap.newInstance();
   /** The map which contains the View Entities Map binding from entityDef.xml*/
   private Map<String, View> viewsMap = FastMap.newInstance();
+  private ArrayList<String> imports;
   
   /**
    * Adds the Entity to the EntityMap which contains the Entity objects 
@@ -92,4 +102,115 @@ public final class Configuration implements Cloneable {
     return this.viewsMap.values().iterator();
   }
   
+  public void addImport(String url) {
+    if (imports == null)
+      imports = new ArrayList<String>();
+    imports.add(url);
+  }
+
+  public List getImports() {
+    return imports;
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public Collection getEntities() {
+    return entitiesMap.values();
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public Collection getViews() {
+    return viewsMap.values();
+  }
+
+  public Entity getEntity(String packageName, String entityName) {
+    return null;
+  }
+
+  public Entity getEntity(String tableName) {
+    return null;
+  }
+  
+  /**
+   * Put all of the component, containerLifecyclePlugin, and componentLifecyclePlugin 
+   * from other which was contained in other(different Configuration) 
+   * to the current(Configuration).
+   */
+  public void mergeConfiguration(Configuration other) {
+    this.entitiesMap.putAll(other.entitiesMap);
+    this.viewsMap.putAll(other.viewsMap);
+  }
+
+  /**
+   * Merge all the given configurations and return a safe copy of the result
+   * 
+   * @param configs the list of configurations to merge ordered by priority, the
+   *          second configuration will override the configuration of the first
+   *          one and so on.
+   * @return the merged configuration
+   */
+  public static Configuration merge(Configuration... configs) {
+    if (configs == null || configs.length == 0) {
+      return null;
+    }
+    Configuration result = null;
+    for (Configuration conf : configs) {
+      if (conf == null) {
+        // Ignore the null configuration
+        continue;
+      } else if (result == null) {
+        try {
+          // Initialize with the clone of the first non null configuration
+          result = (Configuration) conf.clone();
+        } catch (CloneNotSupportedException e) {
+          log.warn("Could not clone the configuration", e);
+          break;
+        }
+      } else {
+        // The merge the current configuration with this new configuration
+        result.mergeConfiguration(conf);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Dumps the configuration in XML format into the given {@link Writer}
+   */
+  public void toXML(Writer w) {
+    try {
+      IBindingFactory bfact = BindingDirectory.getFactory(Configuration.class);
+      IMarshallingContext mctx = bfact.createMarshallingContext();
+      mctx.setIndent(2);
+      mctx.marshalDocument(this, "UTF-8", null, w);
+    } catch (Exception e) {
+      log.warn("Couldn't dump the runtime configuration in XML Format", e);
+    }
+  }
+
+  /**
+   * Dumps the configuration in XML format into a {@link StringWriter} and
+   * returns the content
+   */
+  public String toXML() {
+    StringWriter sw = new StringWriter();
+    try {
+      toXML(sw);
+    } catch (Exception e) {
+      log.warn("Cannot convert the configuration to XML format", e);
+      return null;
+    } finally {
+      try {
+        sw.close();
+      } catch (IOException ignore) {
+      }
+    }
+    return sw.toString();
+  }
+
 }
