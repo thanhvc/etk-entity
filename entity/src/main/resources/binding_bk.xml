@@ -12,11 +12,26 @@
     <value name="never-check" field="neverCheck" usage="optional"/>
     <value name="auto-clear-cache" field="autoClearCache" usage="optional"/>
     <value name="priority" field="priority" usage="optional"/>
-    <collection name="fields" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Field" add-method="addField" iter-method="getFieldIterator"/>
-    <collection name="primary-keys" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.PKField" add-method="addPKField" iter-method="getPKFieldIterator"/>
-    <collection name="indexes" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Index" add-method="addIndex" iter-method="getIndexIterator"/>
+    <collection name="fields" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Field"/>
+    <collection name="primary-keys" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.PKField"/>
+    <collection name="indexes" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Index"/>
   </mapping>
- 
+  
+  <!-- configuration view mapping -->
+ <mapping name="view" class="org.etk.entity.engine.plugins.model.xml.View" pre-get="preGet">
+    <value name="view-name"  field="viewName"/>
+    <value name="package-name"  field="packageName" />
+    <value name="member-entity"  field="memberEntity" />
+    <value name="description" field="description" usage="optional"/>
+    <value name="dependent-on" field="dependentOn" usage="optional"/>
+    <value name="never-cache" field="neverCache" usage="optional"/>
+    <value name="auto-clear-cache" field="autoClearCache" usage="optional"/>
+    <value name="priority" field="priority" usage="optional"/>
+    <collection name="alias" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Field"/>
+    <collection name="pkgs" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.PKField"/>
+    <collection name="indexs" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Index"/>
+  </mapping>
+  
   <!-- configuration object mapping -->
   <mapping name="configuration" class="org.etk.entity.engine.plugins.model.xml.Configuration">
     <collection item-type="org.etk.entity.engine.plugins.model.xml.Entity" usage="optional"

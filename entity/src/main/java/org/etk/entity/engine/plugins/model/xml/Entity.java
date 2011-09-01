@@ -17,9 +17,15 @@
 package org.etk.entity.engine.plugins.model.xml;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.etk.kernel.container.configuration.ConfigurationManagerImpl;
+import org.etk.kernel.container.xml.ObjectParameter;
+import org.etk.kernel.container.xml.PropertiesParam;
+import org.etk.kernel.container.xml.ValueParam;
+import org.etk.kernel.container.xml.ValuesParam;
 import org.jibx.runtime.IMarshallingContext;
 
 import javolution.util.FastList;
@@ -36,7 +42,7 @@ public class Entity implements Comparable<Entity> {
   
   private List<Field> fields = FastList.newInstance();
   
-  private List<Field> pkgs = FastList.newInstance();
+  private List<PKField> pkgs = FastList.newInstance();
   
   private List<Field> nopkg = FastList.newInstance();
   
@@ -87,8 +93,8 @@ public class Entity implements Comparable<Entity> {
    * Adds the field for the Entity.
    * @param object
    */
-  public void addPrimaryKey(Object object) {
-    Field field = (Field) object;
+  public void addPKField(Object object) {
+    PKField field = (PKField) object;
     pkgs.add(field);
   }
   
@@ -114,7 +120,7 @@ public class Entity implements Comparable<Entity> {
     return fields;
   }
 
-  public List<Field> getPkgs() {
+  public List<PKField> getPkgs() {
     return pkgs;
   }
 
@@ -218,7 +224,7 @@ public class Entity implements Comparable<Entity> {
     this.fields = fields;
   }
 
-  public void setPkgs(List<Field> pkgs) {
+  public void setPkgs(List<PKField> pkgs) {
     this.pkgs = pkgs;
   }
 
@@ -236,6 +242,18 @@ public class Entity implements Comparable<Entity> {
   
   public void preGet(IMarshallingContext ictx) {
     ConfigurationMarshallerUtil.addURLToContent(documentURL, ictx);
-}   
+  }   
   
+  
+  public Iterator<Field> getFieldIterator() {
+    return fields.iterator();
+  }
+
+  public Iterator<PKField> getPKFieldIterator() {
+    return pkgs.iterator();
+  }
+  
+  public Iterator<Index> getIndexIterator() {
+    return indexes.iterator();
+  }
 }
