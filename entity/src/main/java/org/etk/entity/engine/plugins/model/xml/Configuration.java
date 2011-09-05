@@ -57,8 +57,7 @@ public final class Configuration implements Cloneable {
    */
   public void addEntity(Object object) {
     Entity entity = (Entity) object;
-    //TODO key = packageName + entityName;
-    String key = "";
+    String key = entity.getPackageName() + "." + entity.getEntityName();
     entitiesMap.put(key, entity);
   }
   
@@ -70,8 +69,7 @@ public final class Configuration implements Cloneable {
    */
   public void addView(Object object) {
     View entityView = (View) object;
-    //TODO key = packageName + viewName;
-    String key = "";
+    String key = entityView.getPackageName() + "." + entityView.getViewName();
     viewsMap.put(key, entityView);
     
     //need to processing when view relate to provided Entity.
@@ -129,11 +127,17 @@ public final class Configuration implements Cloneable {
   }
 
   public Entity getEntity(String packageName, String entityName) {
-    return null;
+    String key = packageName + "." + entityName;
+    return entitiesMap.get(key);
   }
 
-  public Entity getEntity(String tableName) {
-    return null;
+  /**
+   * Gets the Entity which uses the entityFullName = packageName + "." + entityName
+   * @param entityFullName
+   * @return
+   */
+  public Entity getEntity(String entityFullName) {
+    return entitiesMap.get(entityFullName);
   }
   
   /**

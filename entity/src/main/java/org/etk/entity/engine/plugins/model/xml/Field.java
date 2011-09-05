@@ -24,4 +24,27 @@ package org.etk.entity.engine.plugins.model.xml;
  */
 public class Field {
 
+  private String name;
+  private String colName;
+  private String type;
+  
+  
+  public String getName() {
+    return name;
+  }
+  public void setName(String name) {
+    this.name = name;
+  }
+  public String getColName() {
+    return colName;
+  }
+  public void setColName(String colName) {
+    this.colName = colName;
+  }
+  public String getType() {
+    return type;
+  }
+  public void setType(String type) {
+    this.type = type;
+  }
 }

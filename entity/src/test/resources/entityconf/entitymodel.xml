@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+	<entity title="Sample Entity" version="1.0" entity-name="SampleEntity"
+		table-name="SAMPLE_ENTITY" package-name="org.etk.entity.engine.sample">
+		<fields>
+			<field name="primaryKeyFieldOne" col-name="PRIMARY_KEY_FIELD_ONE" type="id-ne"></field>
+			<field name="primaryKeyFieldTwo" type="id-ne"></field>
+			<field name="fieldOne" type="long-varchar"></field>
+			<field name="fieldTwo" type="long-varchar"></field>
+			<field name="foreignKeyOne" type="id"></field>
+		</fields>
+		<primary-keys>
+			<prim-key field="primaryKeyFieldOne" />
+			<prim-key field="primaryKeyFieldTwo" />
+		</primary-keys>
+	</entity>
+
+	<entity title="Sample Entity 1" version="1.0" package-name="org.etk.entity.engine.sample" entity-name="SampleEntity1" table-name="SAMPLE_ENTITY1">
+		<fields>
+			<field name="primaryKeyFieldOne" col-name="PRIMARY_KEY_FIELD_ONE" type="id-ne"></field>
+			<field name="primaryKeyFieldTwo" type="id-ne"></field>
+			<field name="fieldOne" type="long-varchar"></field>
+			<field name="foreignKeyOne" type="id"></field>
+		</fields>
+		<primary-keys>
+			<prim-key field="primaryKeyFieldOne" />
+			<prim-key field="primaryKeyFieldTwo" />
+		</primary-keys>
+	</entity>
+</configuration>

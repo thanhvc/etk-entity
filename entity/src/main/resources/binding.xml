@@ -3,28 +3,33 @@
   <format type="java.lang.String" deserializer="org.etk.entity.engine.plugins.model.xml.Deserializer.resolveString"/>
  <!-- configuration entity mapping -->
  <mapping name="entity" class="org.etk.entity.engine.plugins.model.xml.Entity" pre-get="preGet">
-    <value name="entity-name"  field="entityName"/>
-    <value name="table-name"  field="tableName"/>
-    <value name="package-name"  field="packageName" />
-    <value name="description" field="description" usage="optional"/>
-    <value name="dependent-on" field="dependentOn" usage="optional"/>
-    <value name="never-cache" field="neverCache" usage="optional"/>
-    <value name="never-check" field="neverCheck" usage="optional"/>
-    <value name="auto-clear-cache" field="autoClearCache" usage="optional"/>
-    <value name="priority" field="priority" usage="optional"/>
-    <collection name="fields" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Field" add-method="addField" iter-method="getFieldIterator"/>
-    <collection name="primary-keys" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.PKField" add-method="addPKField" iter-method="getPKFieldIterator"/>
-    <collection name="indexes" usage="optional" item-type="org.etk.entity.engine.plugins.model.xml.Index" add-method="addIndex" iter-method="getIndexIterator"/>
+    <value name="entity-name"  field="entityName" style="attribute"/>
+    <value name="table-name"  field="tableName" style="attribute"/>
+    <value name="package-name"  field="packageName" style="attribute"/>
+    <value name="description" field="description" style="attribute" usage="optional"/>
+    <value name="dependent-on" field="dependentOn" style="attribute" usage="optional"/>
+    <value name="never-cache" field="neverCache" style="attribute" usage="optional"/>
+    <value name="never-check" field="neverCheck" style="attribute" usage="optional"/>
+    <value name="auto-clear-cache" field="autoClearCache" style="attribute" usage="optional"/>
+    <value name="priority" field="priority" style="attribute" usage="optional"/>
+    <collection name="fields" item-type="org.etk.entity.engine.plugins.model.xml.Field" add-method="addField" iter-method="getFieldIterator"/>
+    <collection name="primary-keys" item-type="org.etk.entity.engine.plugins.model.xml.PKField" add-method="addPKField" iter-method="getPKFieldIterator"/>
   </mapping>
- 
+  <!-- field object mapping -->
+  <mapping name="field" class="org.etk.entity.engine.plugins.model.xml.Field">
+    <value name="name"  field="name" style="attribute"/>
+    <value name="col-name"  field="colName" style="attribute" usage="optional"/>
+    <value name="type"  field="type" style="attribute"/>
+  </mapping>
+
+  <!-- primary key object mapping -->
+  <mapping name="prim-key" class="org.etk.entity.engine.plugins.model.xml.PKField">
+    <collection item-type="org.etk.entity.engine.plugins.model.xml.Field" usage="optional" add-method="addField" iter-method="getFieldIterator" test-method="hasPK"/>
+  </mapping>
+  
   <!-- configuration object mapping -->
   <mapping name="configuration" class="org.etk.entity.engine.plugins.model.xml.Configuration">
-    <collection item-type="org.etk.entity.engine.plugins.model.xml.Entity" usage="optional"
-                add-method="addEntity" iter-method="getEntityIterator"
-                test-method="hasEntity"/>
-
-    <collection item-type="org.etk.entity.engine.plugins.model.xml.View" usage="optional"
-                add-method="addView" iter-method="getViewIterator"
-                test-method="hasView"/>
+    <collection item-type="org.etk.entity.engine.plugins.model.xml.Entity" usage="optional" add-method="addEntity" iter-method="getEntityIterator" test-method="hasEntity"/>
+    <collection item-type="org.etk.entity.engine.plugins.model.xml.View" usage="optional" add-method="addView" iter-method="getViewIterator" test-method="hasView"/>
   </mapping> 
 </binding>

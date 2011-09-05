@@ -24,4 +24,33 @@ package org.etk.entity.engine.plugins.model.xml;
  */
 public class View {
 
+  /** The view-name that defined this View. */
+  protected String viewName = "";
+  /** The package-name of the View */
+  protected String packageName = "";
+  /** The description of the View */
+  protected String description = "";
+  
+  public String getViewName() {
+    return viewName;
+  }
+  
+  public void setViewName(String viewName) {
+    this.viewName = viewName;
+  }
+  public String getPackageName() {
+    return packageName;
+  }
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+  public String getDescription() {
+    return description;
+  }
+  public void setDescription(String description) {
+    this.description = description;
+  }
+  
+  
+  
 }

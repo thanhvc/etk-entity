@@ -16,6 +16,11 @@
  */
 package org.etk.entity.engine.plugins.model.xml;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import javolution.util.FastMap;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -24,4 +29,28 @@ package org.etk.entity.engine.plugins.model.xml;
  */
 public class PKField {
 
+  private Map<String, Field> pkMap = FastMap.newInstance();
+  
+  /**
+   * Adds the Field to the FieldMap which contains the Field objects 
+   * to configure in the entitydef.xml
+   *   
+   * @param object
+   */
+  public void addField(Object object) {
+    Field field = (Field) object;
+    pkMap.put(field.getName(), field);
+  }
+  
+  public boolean hasPK() {
+    return pkMap.size() > 0;
+  }
+  
+  /**
+   * Gets the PrimaryKey Iterator for binding.xml mapping
+   * @return
+   */
+  public Iterator getFieldIterator() {
+    return this.pkMap.values().iterator();
+  }
 }
