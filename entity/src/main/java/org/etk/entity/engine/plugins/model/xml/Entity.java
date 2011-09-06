@@ -18,8 +18,10 @@ package org.etk.entity.engine.plugins.model.xml;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.etk.kernel.container.configuration.ConfigurationManagerImpl;
 import org.etk.kernel.container.xml.ObjectParameter;
@@ -29,6 +31,7 @@ import org.etk.kernel.container.xml.ValuesParam;
 import org.jibx.runtime.IMarshallingContext;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 /**
  * Created by The eXo Platform SAS
@@ -40,7 +43,7 @@ public class Entity implements Comparable<Entity> {
 
   private URL documentURL;
   
-  private List<Field> fields = FastList.newInstance();
+  private Map<String, Field> fieldMap = FastMap.newInstance();
   
   private List<PKField> pkgs = FastList.newInstance();
   
@@ -86,7 +89,7 @@ public class Entity implements Comparable<Entity> {
    */
   public void addField(Object object) {
     Field field = (Field) object;
-    fields.add(field);
+    fieldMap.put(field.getName(), field);
   }
   
   /**
@@ -116,8 +119,8 @@ public class Entity implements Comparable<Entity> {
     relations.add(relation);
   }
 
-  public List<Field> getFields() {
-    return fields;
+  public Collection<Field> getFields() {
+    return fieldMap.values();
   }
 
   public List<PKField> getPkgs() {
@@ -220,8 +223,8 @@ public class Entity implements Comparable<Entity> {
     this.hasFieldWithAuditLog = hasFieldWithAuditLog;
   }
 
-  public void setFields(List<Field> fields) {
-    this.fields = fields;
+  public void setFields(Map<String, Field> fields) {
+    this.fieldMap = fields;
   }
 
   public void setPkgs(List<PKField> pkgs) {
@@ -246,7 +249,7 @@ public class Entity implements Comparable<Entity> {
   
   
   public Iterator<Field> getFieldIterator() {
-    return fields.iterator();
+    return fieldMap.values().iterator();
   }
 
   public Iterator<PKField> getPKFieldIterator() {
@@ -255,5 +258,9 @@ public class Entity implements Comparable<Entity> {
   
   public Iterator<Index> getIndexIterator() {
     return indexes.iterator();
+  }
+  
+  public Field getField(String name) {
+    return fieldMap.get(name);
   }
 }

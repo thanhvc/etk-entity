@@ -24,7 +24,7 @@
 
   <!-- primary key object mapping -->
   <mapping name="prim-key" class="org.etk.entity.engine.plugins.model.xml.PKField">
-    <collection item-type="org.etk.entity.engine.plugins.model.xml.Field" usage="optional" add-method="addField" iter-method="getFieldIterator" test-method="hasPK"/>
+    <value name="field-name"  field="fieldName" style="attribute"/>
   </mapping>
   
   <!-- configuration object mapping -->

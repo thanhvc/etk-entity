@@ -12,8 +12,8 @@
 			<field name="foreignKeyOne" type="id"></field>
 		</fields>
 		<primary-keys>
-			<prim-key field="primaryKeyFieldOne" />
-			<prim-key field="primaryKeyFieldTwo" />
+			<prim-key field-name="primaryKeyFieldOne" />
+			<prim-key field-name="primaryKeyFieldTwo" />
 		</primary-keys>
 	</entity>
 
@@ -25,8 +25,8 @@
 			<field name="foreignKeyOne" type="id"></field>
 		</fields>
 		<primary-keys>
-			<prim-key field="primaryKeyFieldOne" />
-			<prim-key field="primaryKeyFieldTwo" />
+			<prim-key field-name="primaryKeyFieldOne" />
+			<prim-key field-name="primaryKeyFieldTwo" />
 		</primary-keys>
 	</entity>
 </configuration>

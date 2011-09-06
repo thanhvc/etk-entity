@@ -17,10 +17,12 @@
 package org.etk.entity.engine;
 
 import java.net.URL;
+import java.util.List;
 
 import org.etk.entity.engine.plugins.model.configuration.ConfigurationUnmarshaller;
 import org.etk.entity.engine.plugins.model.xml.Configuration;
 import org.etk.entity.engine.plugins.model.xml.Entity;
+import org.etk.entity.engine.plugins.model.xml.PKField;
 
 import junit.framework.TestCase;
 
@@ -62,12 +64,14 @@ public class EntityConfigurationManagerTest extends TestCase {
     assertEquals("SampleEntity", sample.getEntityName());
     assertEquals("org.etk.entity.engine.sample", sample.getPackageName());
     assertEquals(5, sample.getFields().size());
+    assertEquals(2, sample.getPkgs().size());
     
     Entity sample1 = conf.getEntity(SAMPLE1_ENTITY_NAME);
     assertNotNull("Sample1 entity must not be null.", sample1);
     assertEquals("SampleEntity1", sample1.getEntityName());
     assertEquals("org.etk.entity.engine.sample", sample1.getPackageName());
     assertEquals(4, sample1.getFields().size());
+    assertEquals(2, sample1.getPkgs().size());
     
   }
   
