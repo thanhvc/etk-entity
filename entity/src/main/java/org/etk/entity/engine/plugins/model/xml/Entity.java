@@ -126,6 +126,10 @@ public class Entity implements Comparable<Entity> {
   public List<PKField> getPkgs() {
     return pkgs;
   }
+  
+  public int getPksSize() {
+    return pkgs.size();
+  }
 
   public List<Field> getNopkg() {
     return nopkg;
@@ -260,7 +264,7 @@ public class Entity implements Comparable<Entity> {
     return indexes.iterator();
   }
   
-  public Field getField(String name) {
-    return fieldMap.get(name);
+  public Field getField(String fieldName) {
+    return fieldMap.get(fieldName);
   }
 }

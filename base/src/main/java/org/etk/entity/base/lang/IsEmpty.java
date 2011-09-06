@@ -14,43 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.etk.entity.engine.plugins.model.xml;
+package org.etk.entity.base.lang;
 
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
- * Aug 26, 2011  
+ * Sep 6, 2011  
  */
-public class View {
-
-  /** The view-name that defined this View. */
-  protected String viewName = "";
-  /** The package-name of the View */
-  protected String packageName = "";
-  /** The description of the View */
-  protected String description = "";
-  
-  public String getViewName() {
-    return viewName;
-  }
-  
-  public void setViewName(String viewName) {
-    this.viewName = viewName;
-  }
-  public String getPackageName() {
-    return packageName;
-  }
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
-  public String getDescription() {
-    return description;
-  }
-  public void setDescription(String description) {
-    this.description = description;
-  }
-  
-  
-  
+public interface IsEmpty {
+  boolean isEmpty();
 }

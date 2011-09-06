@@ -37,6 +37,11 @@
           <groupId>javolution</groupId>
           <artifactId>javolution</artifactId>
       </dependency>  
+      <dependency>
+        <groupId>org.etk.entity</groupId>
+        <artifactId>org.etk.entity.base</artifactId>
+        <version>${org.etk.entity.version}</version>
+      </dependency>
   </dependencies>
   <build>
     <plugins>

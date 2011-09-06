@@ -46,7 +46,7 @@ public final class Configuration implements Cloneable {
   /** The map which contains the Entities Map binding from entityDef.xml.*/
   private Map<String, Entity> entitiesMap = FastMap.newInstance();
   /** The map which contains the View Entities Map binding from entityDef.xml*/
-  private Map<String, View> viewsMap = FastMap.newInstance();
+  private Map<String, ViewEntity> viewsMap = FastMap.newInstance();
   private ArrayList<String> imports;
   
   /**
@@ -68,7 +68,7 @@ public final class Configuration implements Cloneable {
    * @param object
    */
   public void addView(Object object) {
-    View entityView = (View) object;
+    ViewEntity entityView = (ViewEntity) object;
     String key = entityView.getPackageName() + "." + entityView.getViewName();
     viewsMap.put(key, entityView);
     
