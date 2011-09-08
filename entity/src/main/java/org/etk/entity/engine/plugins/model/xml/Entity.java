@@ -18,10 +18,13 @@ package org.etk.entity.engine.plugins.model.xml;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.etk.kernel.container.configuration.ConfigurationManagerImpl;
 import org.etk.kernel.container.xml.ObjectParameter;
@@ -34,84 +37,110 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          thanhvucong.78@exoplatform.com
- * Aug 26, 2011  
+ * Created by The eXo Platform SAS Author : eXoPlatform
+ * thanhvucong.78@exoplatform.com Aug 26, 2011
  */
 public class Entity implements Comparable<Entity> {
 
-  private URL documentURL;
-  
-  private Map<String, Field> fieldMap = FastMap.newInstance();
-  
-  private List<PKField> pkgs = FastList.newInstance();
-  
-  private List<Field> nopkg = FastList.newInstance();
-  
-  private List<Index> indexes = FastList.newInstance();
-  
-  private List<Relation> relations = FastList.newInstance();
-  
+  /** The name of the time stamp field for locking/synchronization */
+  public static final String STAMP_FIELD           = "lastUpdatedStamp";
+
+  public static final String STAMP_TX_FIELD        = "lastUpdatedTxStamp";
+
+  public static final String CREATE_STAMP_FIELD    = "createdStamp";
+
+  public static final String CREATE_STAMP_TX_FIELD = "createdTxStamp";
+
+  private URL                documentURL;
+
+  private Map<String, Field> fieldMap              = FastMap.newInstance();
+
+  private List<Field>        pks                   = FastList.newInstance();
+
+  private List<Field>        nopkg                 = FastList.newInstance();
+
+  private List<Index>        indexes               = FastList.newInstance();
+
+  private List<Relation>     relations             = FastList.newInstance();
+
   /** The entity-name that defined this Entity. */
-  protected String entityName = "";
+  protected String           entityName            = "";
+
   /** The table-name of the Entity */
-  protected String tableName = "";
+  protected String           tableName             = "";
+
   /** The package-name of the Entity */
-  protected String packageName = "";
+  protected String           packageName           = "";
+
   /** The description of the Entity */
-  protected String description = "";
-  
+  protected String           description           = "";
+
+  /** An indicator to specify if this entity requires locking for updates */
+  protected boolean          doLock                = false;
+
   /**
-   * The entity-name of the Entity that this Entity is dependent on,
-   *  If empty then no dependency
+   * Can be used to disable automatically creating update stamp fields and
+   * populating them on inserts and updates
    */
-  protected String dependentOn = "";
-  
-  protected boolean neverCache = false;
-  protected boolean neverCheck = false;
-  protected boolean autoClearCache = true;
-  protected Boolean hasFieldWithAuditLog = null;
-  
-  protected int priority = 0;
-  
+  protected boolean          noAutoStamp           = false;
+
+  /**
+   * The entity-name of the Entity that this Entity is dependent on, If empty
+   * then no dependency
+   */
+  protected String           dependentOn           = "";
+
+  protected boolean          neverCache            = false;
+
+  protected boolean          neverCheck            = false;
+
+  protected boolean          autoClearCache        = true;
+
+  protected Boolean          hasFieldWithAuditLog  = null;
+
+  protected int              priority              = 0;
+
   public Entity() {
     documentURL = ConfigurationManagerImpl.getCurrentURL();
   }
-  
+
   public URL getDocumentURL() {
     return documentURL;
   }
 
   /**
    * Adds the field for the Entity.
+   * 
    * @param object
    */
   public void addField(Object object) {
     Field field = (Field) object;
     fieldMap.put(field.getName(), field);
   }
-  
+
   /**
    * Adds the field for the Entity.
+   * 
    * @param object
    */
   public void addPKField(Object object) {
-    PKField field = (PKField) object;
-    pkgs.add(field);
+    PKField pkfield = (PKField) object;
+    pks.add(fieldMap.get(pkfield.getFieldName()));
   }
-  
+
   /**
    * Adds the Index for the Entity.
+   * 
    * @param object
    */
   public void addIndex(Object object) {
     Index index = (Index) object;
     indexes.add(index);
   }
-  
+
   /**
    * Adds the Relation for the Entity.
+   * 
    * @param object
    */
   public void addRelation(Object object) {
@@ -123,12 +152,12 @@ public class Entity implements Comparable<Entity> {
     return fieldMap.values();
   }
 
-  public List<PKField> getPkgs() {
-    return pkgs;
+  public List<Field> getPkgs() {
+    return pks;
   }
-  
+
   public int getPksSize() {
-    return pkgs.size();
+    return pks.size();
   }
 
   public List<Field> getNopkg() {
@@ -142,7 +171,7 @@ public class Entity implements Comparable<Entity> {
   public List<Relation> getRelations() {
     return relations;
   }
-  
+
   public int getPriority() {
     return priority;
   }
@@ -231,8 +260,8 @@ public class Entity implements Comparable<Entity> {
     this.fieldMap = fields;
   }
 
-  public void setPkgs(List<PKField> pkgs) {
-    this.pkgs = pkgs;
+  public void setPkgs(List<Field> pkgs) {
+    this.pks = pkgs;
   }
 
   public void setNopkg(List<Field> nopkg) {
@@ -246,25 +275,130 @@ public class Entity implements Comparable<Entity> {
   public void setRelations(List<Relation> relations) {
     this.relations = relations;
   }
-  
+
+  public Iterator<Relation> getRelationsIterator() {
+    return relations.iterator();
+  }
+
   public void preGet(IMarshallingContext ictx) {
     ConfigurationMarshallerUtil.addURLToContent(documentURL, ictx);
-  }   
-  
-  
-  public Iterator<Field> getFieldIterator() {
+  }
+
+  // TODO Check binding.xml
+  public Iterator<Field> getFieldsIterator() {
     return fieldMap.values().iterator();
   }
 
-  public Iterator<PKField> getPKFieldIterator() {
-    return pkgs.iterator();
+  // TODO Check binding.xml
+  public Iterator<Field> getPksIterator() {
+    return pks.iterator();
   }
-  
+
+  // TODO Check binding.xml
+  public Iterator<Field> getNopksIterator() {
+    return this.nopkg.iterator();
+  }
+
   public Iterator<Index> getIndexIterator() {
     return indexes.iterator();
   }
-  
+
   public Field getField(String fieldName) {
     return fieldMap.get(fieldName);
+  }
+
+  public Set<String> getAllFieldNames() {
+    return fieldMap.keySet();
+  }
+
+  public List<String> getPkFieldNames() {
+    return getFieldNamesFromFieldVector(pks);
+  }
+
+  public List<String> getNoPkFieldNames() {
+    return getFieldNamesFromFieldVector(nopkg);
+  }
+
+  public List<String> getFieldNamesFromFieldVector(Field... modelFields) {
+    return getFieldNamesFromFieldVector(Arrays.asList(modelFields));
+  }
+
+  public List<String> getFieldNamesFromFieldVector(List<Field> modelFields) {
+    List<String> nameList = FastList.newInstance();
+
+    if (modelFields == null || modelFields.size() <= 0)
+      return nameList;
+    for (Field field : modelFields) {
+      nameList.add(field.getName());
+    }
+    return nameList;
+  }
+
+  /** An indicator to specify if this entity requires locking for updates */
+  public boolean getDoLock() {
+    return this.doLock;
+  }
+
+  public void setDoLock(boolean doLock) {
+    this.doLock = doLock;
+  }
+
+  public boolean lock() {
+    if (doLock && isField(STAMP_FIELD)) {
+      return true;
+    } else {
+      doLock = false;
+      return false;
+    }
+  }
+
+  public boolean isField(String fieldName) {
+    if (fieldName == null)
+      return false;
+    for (Field field : fieldMap.values()) {
+      if (field.getName().equals(fieldName))
+        return true;
+    }
+    return false;
+  }
+
+  public Field getOnlyPk() {
+    if (this.pks.size() == 1) {
+      return this.pks.get(0);
+    } else {
+      throw new IllegalArgumentException("Error in getOnlyPk, the [" + this.getEntityName()
+          + "] entity has more than one pk!");
+    }
+  }
+
+  public List<Field> getPkFieldsUnmodifiable() {
+    return Collections.unmodifiableList(this.pks);
+  }
+
+  public String fieldNameString() {
+    return fieldNameString(", ", "");
+  }
+
+  public String fieldNameString(String separator, String afterLast) {
+    Field[] fields = fieldMap.values().toArray(new Field[0]);
+    return nameString(Arrays.asList(fields), separator, afterLast);
+  }
+
+  public String nameString(List<Field> flds, String separator, String afterLast) {
+    StringBuilder returnString = new StringBuilder();
+
+    if (flds.size() < 1) {
+      return "";
+    }
+
+    int i = 0;
+
+    for (; i < flds.size() - 1; i++) {
+      returnString.append(flds.get(i).getName());
+      returnString.append(separator);
+    }
+    returnString.append(flds.get(i).getName());
+    returnString.append(afterLast);
+    return returnString.toString();
   }
 }

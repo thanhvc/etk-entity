@@ -16,11 +16,62 @@
  */
 package org.etk.entity.engine.core;
 
-/**
- * Author : ThanhVuCong
- *          thanhvucong.78@gmail.com
- * Aug 26, 2011  
- */
-public class GenericPK {
+import java.util.Map;
 
+import org.etk.entity.engine.api.Delegator;
+import org.etk.entity.engine.plugins.model.xml.Entity;
+
+import javolution.context.ObjectFactory;
+
+/**
+ * Generic Entity Primary Key Object
+ *
+ */
+@SuppressWarnings("serial")
+public class GenericPK extends GenericEntity {
+
+    protected static final ObjectFactory<GenericPK> genericPKFactory = new ObjectFactory<GenericPK>() {
+        @Override
+        protected GenericPK create() {
+            return new GenericPK();
+        }
+    };
+
+    protected GenericPK() { }
+
+    /** Creates new GenericPK */
+    public static GenericPK create(Entity modelEntity) {
+        GenericPK newPK = genericPKFactory.object();
+        newPK.init(modelEntity);
+        return newPK;
+    }
+
+    /** Creates new GenericPK from existing Map */
+    public static GenericPK create(Delegator delegator, Entity modelEntity, Map<String, ? extends Object> fields) {
+        GenericPK newPK = genericPKFactory.object();
+        newPK.init(delegator, modelEntity, fields);
+        return newPK;
+    }
+
+    /** Creates new GenericPK from existing Map */
+    public static GenericPK create(Delegator delegator, Entity modelEntity, Object singlePkValue) {
+        GenericPK newPK = genericPKFactory.object();
+        newPK.init(delegator, modelEntity, singlePkValue);
+        return newPK;
+    }
+
+    /** Creates new GenericPK from existing GenericPK */
+    public static GenericPK create(GenericPK value) {
+        GenericPK newPK = genericPKFactory.object();
+        newPK.init(value);
+        return newPK;
+    }
+
+    /** Clones this GenericPK, this is a shallow clone & uses the default shallow HashMap clone
+     *@return Object that is a clone of this GenericPK
+     */
+    @Override
+    public Object clone() {
+        return GenericPK.create(this);
+    }
 }

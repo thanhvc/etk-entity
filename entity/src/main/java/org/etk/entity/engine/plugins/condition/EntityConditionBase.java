@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.etk.entity.engine.plugins.config.DatasourceInfo;
+import org.etk.entity.engine.plugins.jdbc.SqlJdbcUtil;
 import org.etk.entity.engine.plugins.model.xml.Entity;
 import org.etk.entity.engine.plugins.model.xml.Field;
 import org.etk.entity.engine.plugins.model.xml.ViewEntity;

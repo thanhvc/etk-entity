@@ -16,17 +16,30 @@
  */
 package org.etk.entity.engine.api;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.etk.entity.engine.core.EntityCryptoException;
 import org.etk.entity.engine.core.GenericDelagator;
 import org.etk.entity.engine.core.GenericEntity;
 import org.etk.entity.engine.core.GenericEntityException;
 import org.etk.entity.engine.core.GenericPK;
 import org.etk.entity.engine.core.GenericValue;
+import org.etk.entity.engine.plugins.condition.EntityCondition;
+import org.etk.entity.engine.plugins.datasource.GenericHelper;
 import org.etk.entity.engine.plugins.model.xml.Entity;
+import org.etk.entity.engine.plugins.model.xml.FieldType;
+import org.etk.entity.engine.plugins.model.xml.ViewEntity;
+import org.etk.entity.engine.plugins.util.EntityCrypto;
+import org.etk.entity.engine.plugins.util.EntityFindOptions;
+import org.etk.entity.engine.plugins.util.EntityListIterator;
+import org.etk.entity.engine.plugins.util.SequenceUtil;
+import org.xml.sax.SAXException;
 
 /**
  * Created by The eXo Platform SAS
@@ -464,7 +477,7 @@ public interface Delegator {
    *         LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE
    *         CONNECTION.
    */
-  public EntityListIterator findListIteratorByCondition(DynamicViewEntity dynamicViewEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition, Collection<String> fieldsToSelect, List<String> orderBy, EntityFindOptions findOptions) throws GenericEntityException;
+  public EntityListIterator findListIteratorByCondition(ViewEntity dynamicViewEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition, Collection<String> fieldsToSelect, List<String> orderBy, EntityFindOptions findOptions) throws GenericEntityException;
 
   /**
    * Find a Generic Entity by its Primary Key NOTE 20080502: 6 references
@@ -564,7 +577,7 @@ public interface Delegator {
    * @return String with the helper name that corresponds to this delegator
    *         and the specified entity
    */
-  public String getEntityHelperName(ModelEntity entity);
+  public String getEntityHelperName(Entity entity);
 
   /**
    * Gets the helper name that corresponds to this delegator and the specified
@@ -599,7 +612,7 @@ public interface Delegator {
    *            The name of the group
    * @return Map of entityName String keys and ModelEntity instance values
    */
-  public Map<String, ModelEntity> getModelEntityMapByGroup(String groupName) throws GenericEntityException;
+  public Map<String, Entity> getModelEntityMapByGroup(String groupName) throws GenericEntityException;
 
   
   /**

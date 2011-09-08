@@ -18,6 +18,7 @@ package org.etk.entity.engine.core;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -27,9 +28,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.etk.common.logging.Logger;
+import org.etk.entity.base.collections.LocalizedMap;
 import org.etk.entity.base.utils.GeneralException;
 import org.etk.entity.base.utils.ObjectType;
 import org.etk.entity.base.utils.TimeDuration;
@@ -38,8 +41,11 @@ import org.etk.entity.base.utils.UtilGenerics;
 import org.etk.entity.base.utils.UtilProperties;
 import org.etk.entity.base.utils.UtilValidate;
 import org.etk.entity.engine.api.Delegator;
+import org.etk.entity.engine.plugins.condition.EntityCondition;
+import org.etk.entity.engine.plugins.jdbc.SqlJdbcUtil;
 import org.etk.entity.engine.plugins.model.xml.Entity;
 import org.etk.entity.engine.plugins.model.xml.Field;
+import org.etk.entity.engine.plugins.model.xml.FieldType;
 import org.etk.entity.engine.plugins.model.xml.ViewEntity;
 
 import javolution.lang.Reusable;
@@ -58,7 +64,7 @@ import javolution.util.FastMap;
  */
 public class GenericEntity extends Observable implements Map<String, Object>, LocalizedMap<Object>,
     Serializable, Comparable<GenericEntity>, Cloneable, Reusable {
-  private static Logger logger = Logger.getLogger(GenericEntity.class);
+  private static Logger             logger            = Logger.getLogger(GenericEntity.class);
 
   public static final GenericEntity NULL_ENTITY       = new NullGenericEntity();
 
@@ -84,18 +90,24 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
    */
   protected boolean                 modified          = false;
 
-  protected boolean                 generateHashCode = true;
+  protected boolean                 generateHashCode  = true;
 
   protected int                     cachedHashCode    = 0;
 
-  /** Used to specify whether or not this representation of the entity can be changed; generally cleared when this object comes from a cache */
+  /**
+   * Used to specify whether or not this representation of the entity can be
+   * changed; generally cleared when this object comes from a cache
+   */
   protected boolean                 mutable           = true;
 
-  /** This is an internal field used to specify that a value has come from a sync process and that the auto-stamps should not be over-written */
+  /**
+   * This is an internal field used to specify that a value has come from a sync
+   * process and that the auto-stamps should not be over-written
+   */
   protected boolean                 isFromEntitySync  = false;
 
-  
-  protected GenericEntity() {}
+  protected GenericEntity() {
+  }
 
   public static GenericEntity createGenericEntity(Entity entity) {
     if (entity == null) {
@@ -244,14 +256,14 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
   public String getEntityName() {
     return entityName;
   }
-  
- 
+
   public Entity getModelEntity() {
     if (entity == null) {
       if (entityName != null)
         entity = this.getDelegator().getEntity(entityName);
       if (entity == null) {
-        throw new IllegalStateException("[GenericEntity.getModelEntity] could not find modelEntity for entityName " + entityName);
+        throw new IllegalStateException("[GenericEntity.getModelEntity] could not find modelEntity for entityName "
+            + entityName);
       }
     }
     return entity;
@@ -290,12 +302,11 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
 
   public Object get(String name) {
     if (getModelEntity().getField(name) == null) {
-      logger.warm("The field name (or key) ["
-                           + name
-                           + "] is not valid for entity ["
-                           + this.getEntityName()
-                           + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.",
-                       );
+      logger.warn("The field name (or key) ["
+          + name
+          + "] is not valid for entity ["
+          + this.getEntityName()
+          + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
       return null;
     }
     return fields.get(name);
@@ -391,7 +402,7 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
           + entityName + ", must be one of: " + getModelEntity().fieldNameString());
     }
     if (value != null || setIfNull) {
-      Field type = null;
+      FieldType type = null;
       try {
         type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
       } catch (GenericEntityException e) {
@@ -434,7 +445,9 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
                 + "]";
             // eventually we should do this, but for now we'll do a "soft"
             // failure: throw new IllegalArgumentException(errMsg);
-            logger.warn("=-=-=-=-=-=-=-=-= Database type warning GenericEntity.set =-=-=-=-=-=-=-=-= " + errMsg, new Exception("Location of database type warning"));
+            logger.warn("=-=-=-=-=-=-=-=-= Database type warning GenericEntity.set =-=-=-=-=-=-=-=-= "
+                            + errMsg,
+                        new Exception("Location of database type warning"));
           }
         }
       }
@@ -735,12 +748,11 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
     if (value instanceof org.ofbiz.entity.util.ByteWrapper) {
       // NOTE DEJ20071022: the use of ByteWrapper is not recommended and is
       // deprecated, only old data should be stored that way
-      Debug.logWarning("Found a ByteWrapper object in the database for field ["
-                           + this.getEntityName()
-                           + "."
-                           + name
-                           + "]; converting to byte[] and returning, but note that you need to update your database to unwrap these objects for future compatibility",
-                       module);
+      logger.warn("Found a ByteWrapper object in the database for field ["
+          + this.getEntityName()
+          + "."
+          + name
+          + "]; converting to byte[] and returning, but note that you need to update your database to unwrap these objects for future compatibility");
       org.ofbiz.entity.util.ByteWrapper wrapper = (org.ofbiz.entity.util.ByteWrapper) value;
       return wrapper.getBytes();
     }
@@ -792,41 +804,42 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
     try {
       fieldValue = get(name);
     } catch (IllegalArgumentException e) {
-        logger.warn("The field name (or key) ["
-                             + name
-                             + "] is not valid for entity ["
-                             + this.getEntityName()
-                             + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
+      logger.warn("The field name (or key) ["
+          + name
+          + "] is not valid for entity ["
+          + this.getEntityName()
+          + "], printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
       fieldValue = null;
 
-    // In case of view entity first try to retrieve with View field names
-    Entity modelEntityToUse = this.getModelEntity();
-    Object resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
-    if (resourceValue == null) {
-      if (modelEntityToUse instanceof ViewEntity) {
-        // now try to retrieve with the field heading from the real entity
-        // linked to the view
-        ViewEntity modelViewEntity = (ViewEntity) modelEntityToUse;
-        Iterator<ModelAlias> it = modelViewEntity.getAliasesIterator();
-        while (it.hasNext()) {
-          ModelAlias modelAlias = it.next();
-          if (modelAlias.getName().equalsIgnoreCase(name)) {
-            modelEntityToUse = modelViewEntity.getMemberModelEntity(modelAlias.getEntityAlias());
-            name = modelAlias.getField();
-            break;
+      // In case of view entity first try to retrieve with View field names
+      Entity modelEntityToUse = this.getModelEntity();
+      Object resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
+      if (resourceValue == null) {
+        if (modelEntityToUse instanceof ViewEntity) {
+          // now try to retrieve with the field heading from the real entity
+          // linked to the view
+          ViewEntity modelViewEntity = (ViewEntity) modelEntityToUse;
+          Iterator<ModelAlias> it = modelViewEntity.getAliasesIterator();
+          while (it.hasNext()) {
+            ModelAlias modelAlias = it.next();
+            if (modelAlias.getName().equalsIgnoreCase(name)) {
+              modelEntityToUse = modelViewEntity.getMemberModelEntity(modelAlias.getEntityAlias());
+              name = modelAlias.getField();
+              break;
+            }
           }
-        }
-        resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
-        if (resourceValue == null) {
-          return fieldValue;
+          resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
+          if (resourceValue == null) {
+            return fieldValue;
+          } else {
+            return resourceValue;
+          }
         } else {
-          return resourceValue;
+          return fieldValue;
         }
       } else {
-        return fieldValue;
+        return resourceValue;
       }
-    } else {
-      return resourceValue;
     }
   }
 
@@ -975,7 +988,8 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
       String fieldName = curField.getName();
       String sourceFieldName = null;
       if (UtilValidate.isNotEmpty(namePrefix)) {
-        sourceFieldName = namePrefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        sourceFieldName = namePrefix + Character.toUpperCase(fieldName.charAt(0))
+            + fieldName.substring(1);
       } else {
         sourceFieldName = curField.getName();
       }
@@ -1011,6 +1025,43 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
   }
 
   /**
+   * Returns keys of entity fields
+   * 
+   * @return java.util.Collection
+   */
+  public Collection<String> getAllKeys() {
+    return fields.keySet();
+  }
+
+  /**
+   * Returns key/value pairs of entity fields
+   * 
+   * @return java.util.Map
+   */
+  public Map<String, Object> getAllFields() {
+    Map<String, Object> newMap = FastMap.newInstance();
+    newMap.putAll(this.fields);
+    return newMap;
+  }
+
+  /**
+   * Used by clients to specify exactly the fields they are interested in
+   * 
+   * @param keysofFields the name of the fields the client is interested in
+   * @return java.util.Map
+   */
+  public Map<String, Object> getFields(Collection<String> keysofFields) {
+    if (keysofFields == null)
+      return null;
+    Map<String, Object> aMap = FastMap.newInstance();
+
+    for (String aKey : keysofFields) {
+      aMap.put(aKey, this.fields.get(aKey));
+    }
+    return aMap;
+  }
+
+  /**
    * Determines the equality of two GenericEntity objects, overrides the default
    * equals
    * 
@@ -1031,7 +1082,7 @@ public class GenericEntity extends Observable implements Map<String, Object>, Lo
   }
 
   public void setFields(Map<? extends String, ? extends Object> keyValuePairs) {
-    if (ketValuePairs == null)
+    if (keyValuePairs == null)
       return;
     // this could be implement with Map.putAll, but we 'll leave it like this
     // for the extra feature it has.
