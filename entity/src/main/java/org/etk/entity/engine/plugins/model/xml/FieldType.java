@@ -49,17 +49,7 @@ public class FieldType implements Serializable {
   public FieldType() {
   }
 
-  /** XML Constructor */
-  public FieldType(Element fieldTypeElement) {
-    this.type = UtilXml.checkEmpty(fieldTypeElement.getAttribute("type")).intern();
-    this.javaType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("java-type")).intern();
-    this.sqlType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type")).intern();
-    this.sqlTypeAlias = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type-alias"))
-                               .intern();
-    this.jdbcValueHandler = JdbcValueHandler.getInstance(this.javaType, this.sqlType);
-  }
-
-  /** The type of the Field */
+   /** The type of the Field */
   public String getType() {
     return this.type;
   }

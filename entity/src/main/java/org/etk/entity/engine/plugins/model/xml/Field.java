@@ -47,4 +47,10 @@ public class Field {
   public void setType(String type) {
     this.type = type;
   }
+  public boolean getIsNotNull() {
+    return true;
+  }
+  public boolean getIsPk() {
+    return true;
+  }
 }

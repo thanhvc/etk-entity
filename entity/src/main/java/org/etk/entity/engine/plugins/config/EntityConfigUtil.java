@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.etk.common.logging.Logger;
 import org.etk.entity.engine.core.GenericEntityException;
 
 /**
@@ -28,7 +29,7 @@ import org.etk.entity.engine.core.GenericEntityException;
  */
 public class EntityConfigUtil {
 
-    public static final String module = EntityConfigUtil.class.getName();
+    private static final Logger logger = Logger.getLogger(EntityConfigUtil.class);
     public static final String ENTITY_ENGINE_XML_FILENAME = "entityengine.xml";
 
     private static volatile AtomicReference<EntityConfigUtil> configRef = new AtomicReference<EntityConfigUtil>();
@@ -62,7 +63,7 @@ public class EntityConfigUtil {
         try {
             initialize(getXmlRootElement());
         } catch (Exception e) {
-            Debug.logError(e, "Error loading entity config XML file " + ENTITY_ENGINE_XML_FILENAME, module);
+            logger.error(e, "Error loading entity config XML file " + ENTITY_ENGINE_XML_FILENAME);
         }
     }
 

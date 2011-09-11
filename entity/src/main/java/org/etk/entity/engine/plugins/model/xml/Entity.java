@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.etk.entity.base.utils.UtilValidate;
+import org.etk.entity.engine.plugins.config.DatasourceInfo;
 import org.etk.kernel.container.configuration.ConfigurationManagerImpl;
 import org.etk.kernel.container.xml.ObjectParameter;
 import org.etk.kernel.container.xml.PropertiesParam;
@@ -194,6 +196,22 @@ public class Entity implements Comparable<Entity> {
 
   public String getTableName() {
     return tableName;
+  }
+  
+  
+  /** The plain table-name of the Entity without a schema name prefix */
+  public String getPlainTableName() {
+      return this.tableName;
+  }
+
+  
+  /** The table-name of the Entity including a Schema name if specified in the datasource config */
+  public String getTableName(DatasourceInfo datasourceInfo) {
+      if (datasourceInfo != null && UtilValidate.isNotEmpty(datasourceInfo.schemaName)) {
+          return datasourceInfo.schemaName + "." + this.tableName;
+      } else {
+          return this.tableName;
+      }
   }
 
   public void setTableName(String tableName) {
